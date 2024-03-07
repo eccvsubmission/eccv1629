@@ -1,5 +1,8 @@
 #  ECCV submission 1629: Learning ego-vehicle driving intentions from partially overlapping multi-modal datasets
-The code and newly annotated NuScenes testset intention recognition labels accompanying our ECCV submission. 
+The code and newly annotated NuScenes intention recognition labels accompanying our ECCV submission. 
+
+[alt text for screen readers](/figs/problem_overview.png "").
+
 
 ## Start-up details
 - pip install -r requirements.txt
