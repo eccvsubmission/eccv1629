@@ -93,13 +93,13 @@ class MultiModalVMAE(nn.Module):
         self.num_classes = num_classes
         self.fusion_type = fusion_type
         self.incabin_model = VideoMAEForVideoClassification.from_pretrained(model_ckpt,
-                                                                      ignore_mismatched_sizes=True).to("cuda:1")
+                                                                      ignore_mismatched_sizes=True)
         self.incabin_model.classifier = torch.nn.Identity()
         self.exterior_model = VideoMAEForVideoClassification.from_pretrained(model_ckpt,
-                                                                      ignore_mismatched_sizes=True).to("cuda:0")
+                                                                      ignore_mismatched_sizes=True)
         self.exterior_model.classifier = torch.nn.Identity()
-        self.fusion_layer = self.fusion_layer_constructor(fusion_type=fusion_type).to("cuda:0")
-        self.fc = torch.nn.Linear(self.feature_dim, self.num_classes).to("cuda:0")
+        self.fusion_layer = self.fusion_layer_constructor(fusion_type=fusion_type)
+        self.fc = torch.nn.Linear(self.feature_dim, self.num_classes)
         
     def fusion_layer_constructor(self, fusion_type:str):
         
@@ -132,8 +132,7 @@ class MultiModalVMAE(nn.Module):
         
     def forward(self, x):
         if "incabin_video" in x.keys():
-            x_incabin_features = self.incabin_model(x["incabin_video"].permute(0,2,1,3,4).to("cuda:1")).logits
-            x_incabin_features = x_incabin_features.to("cuda:0")
+            x_incabin_features = self.incabin_model(x["incabin_video"].permute(0,2,1,3,4)).logits
         if "video"in x.keys() : 
             x_exterior_features = self.exterior_model(x["video"].permute(0,2,1,3,4)).logits
         if (self.fusion_type == "af") or (self.fusion_type == "deepset"):
@@ -188,21 +187,21 @@ class MM_MultiModalVMAE_shared_encoder(nn.Module):
         self.num_classes = num_classes
         self.fusion_type = fusion_type
         self.incabin_model = VideoMAEForVideoClassification.from_pretrained(model_ckpt,
-                                                                      ignore_mismatched_sizes=True).to("cuda:1")
-        self.canbus_model = TST_wrapper().to("cuda:1")
+                                                                      ignore_mismatched_sizes=True)
+        self.canbus_model = TST_wrapper()
         
-        self.shared_encoding_layer = copy.deepcopy(self.incabin_model.videomae.encoder.layer[-1]).to("cuda:0")
+        self.shared_encoding_layer = copy.deepcopy(self.incabin_model.videomae.encoder.layer[-1])
         del self.incabin_model.videomae.encoder.layer[-1]
         self.incabin_model.classifier = torch.nn.Identity()
         
 
         self.exterior_model = VideoMAEForVideoClassification.from_pretrained(model_ckpt,
-                                                                      ignore_mismatched_sizes=True).to("cuda:0")
+                                                                      ignore_mismatched_sizes=True)
         del self.exterior_model.videomae.encoder.layer[-1]
         self.exterior_model.classifier = torch.nn.Identity()
         # always average the available modalities
-        self.fusion_layer = Add(avg=True).to("cuda:0")
-        self.fc = torch.nn.Linear(self.feature_dim, self.num_classes).to("cuda:0")
+        self.fusion_layer = Add(avg=True)
+        self.fc = torch.nn.Linear(self.feature_dim, self.num_classes)
         
         self.contrastive_loss = contrastive_loss
         if contrastive_loss:
@@ -223,20 +222,18 @@ class MM_MultiModalVMAE_shared_encoder(nn.Module):
             pass
         
         if ("incabin_video" in x.keys()) and all_input:
-            x_features = self.incabin_model(x["incabin_video"].permute(0,2,1,3,4).to("cuda:1")).logits
-            x_features = x_features.to("cuda:0")
+            x_features = self.incabin_model(x["incabin_video"].permute(0,2,1,3,4)).logits
             x_features = self.shared_encoding_layer(x_features.unsqueeze(dim=1))[0].squeeze()
         
         elif ("canbus" in x.keys()) and all_input:
-            x_features = self.canbus_model(x["canbus"].type(torch.FloatTensor).to("cuda:1"))
-            x_features = x_features.to("cuda:0")
+            x_features = self.canbus_model(x["canbus"].type(torch.FloatTensor))
             x_features = self.shared_encoding_layer(x_features.unsqueeze(dim=1))[0].squeeze()
         
         else:
             x_features=None
         
         if ("video"in x.keys()): 
-            x_exterior_features = self.exterior_model(x["video"].permute(0,2,1,3,4).to("cuda:0")).logits
+            x_exterior_features = self.exterior_model(x["video"].permute(0,2,1,3,4)).logits
             x_exterior_features = self.shared_encoding_layer(x_exterior_features.unsqueeze(dim=1))[0].squeeze()       
         
         if  x_features is not None:
@@ -273,15 +270,15 @@ class MM_MultiModalVMAE(nn.Module):
         self.num_classes = num_classes
         self.fusion_type = fusion_type
         self.incabin_model = VideoMAEForVideoClassification.from_pretrained(model_ckpt,
-                                                                      ignore_mismatched_sizes=True).to("cuda:1")
-        self.canbus_model = TST_wrapper().to("cuda:1")
+                                                                      ignore_mismatched_sizes=True)
+        self.canbus_model = TST_wrapper()
         self.incabin_model.classifier = torch.nn.Identity()
         self.exterior_model = VideoMAEForVideoClassification.from_pretrained(model_ckpt,
-                                                                      ignore_mismatched_sizes=True).to("cuda:0")
+                                                                      ignore_mismatched_sizes=True)
         self.exterior_model.classifier = torch.nn.Identity()
         # always average the available modalities
         self.fusion_layer = Add(avg=True).to("cpu")
-        self.fc = torch.nn.Linear(self.feature_dim, self.num_classes).to("cuda:0")
+        self.fc = torch.nn.Linear(self.feature_dim, self.num_classes)
         
         self.contrastive_loss = contrastive_loss
         if contrastive_loss:
@@ -300,19 +297,18 @@ class MM_MultiModalVMAE(nn.Module):
         features = []
         
         if ("incabin_video" in x.keys()):
-            in_cabin_features = self.incabin_model(x["incabin_video"].permute(0,2,1,3,4).to("cuda:1")).logits
-            in_cabin_features = in_cabin_features.to("cuda:0")
+            in_cabin_features = self.incabin_model(x["incabin_video"].permute(0,2,1,3,4))).logits
             features.append(in_cabin_features)
         else:
             in_cabin_features = None
         if ("canbus" in x.keys()):
-            canbus_features = self.canbus_model(x["canbus"].type(torch.FloatTensor).to("cuda:1"))
-            canbus_features = canbus_features.to("cuda:0")
+            canbus_features = self.canbus_model(x["canbus"].type(torch.FloatTensor))
+            canbus_features = canbus_features
             features.append(canbus_features)
         else:
             canbus_features = None    
         if ("video"in x.keys()): 
-            x_exterior_features = self.exterior_model(x["video"].permute(0,2,1,3,4).to("cuda:0")).logits    
+            x_exterior_features = self.exterior_model(x["video"].permute(0,2,1,3,4)).logits    
             features.append(x_exterior_features)
             
         x_fusion = self.fusion_layer(features)
