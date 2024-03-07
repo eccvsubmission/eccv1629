@@ -9,6 +9,8 @@ The code and newly annotated NuScenes intention recognition labels accompanying 
 - dataset pre-processing
 
 ## Datasets, Attribution & Licences 
+**Todo: check appropriate license for sharing the annotations openly.**
+
 - Brain4Cars: http://brain4cars.com/
 - HDD: https://usa.honda-ri.com/hdd (requires university affiliation and e-mail to request access)
 - ROAD / Oxford: https://github.com/gurkirt/road-dataset
