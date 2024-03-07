@@ -21,9 +21,11 @@ Redistribution and use in source and binary forms, with or without modification,
 
 - HDD: https://usa.honda-ri.com/hdd (requires university affiliation and e-mail to request access to get the license)
 - ROAD / Oxford: https://github.com/gurkirt/road-dataset
+
 ROAD dataset is build upon Oxford Robot Car Dataset (OxRD). Similar to the original dataset (OxRD), the ROAD dataset is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License and is intended for non-commercial academic use. If you are interested in using the dataset for commercial purposes, please contact original creator OxRD for video content and Fabio and Gurkirt for event annotations.
   
 - NuScenes: https://www.nuscenes.org/ (also available at https://registry.opendata.aws/motional-nuscenes/)
+  
 Unless specifically labeled otherwise, these Datasets are provided to You under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (“CC BY-NC-SA 4.0”), with the additional terms included herein. The CC BY-NC-SA 4.0 may be accessed at https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode When You download or use the Datasets from the Websites or elsewhere, You are agreeing to comply with the terms of CC BY-NC-SA 4.0 as applicable, and also agreeing to the Dataset Terms. Where these Dataset Terms conflict with the terms of CC BY-NC-SA 4.0, these Dataset Terms shall prevail. (https://www.nuscenes.org/terms-of-use)
 
 ### Model zoo
