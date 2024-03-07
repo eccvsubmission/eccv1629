@@ -1,5 +1,5 @@
 from utils.dataloader import dataset
-from utils.models import MM_MultiModalVMAE_shared_encoder,MultiModalVMAE,OneStreamVMAE,OneStreamVMAE_UnlabeledHybrid_k400ft,OneStreamSWIN,OneStreamMVIT,OneStreamVMAE_UnlabeledHybrid,  freeze_params
+from utils.models import *
 from torch.utils.data import DataLoader
 from utils.main import run_training
 import argparse
