@@ -19,4 +19,4 @@ Todo: check simple way to host the trained weights
 Check the run.py script for a full overview of possibilities.
 You can easily wrap the run scripts in a bash file to execute a number of folds or combinations.
 
-`run python --model-type [model type] --datasets hdd b4c oxford`
+`python run.py --model-type [model type] --datasets hdd b4c oxford ...`
